@@ -25,7 +25,7 @@ const twilioClient = twilio(accountSid, authToken);
 // |------------------------------|
 
 let speed = 0;
-let number = "+16502754976";
+let number = "+16196189435";
 
 // route for handling input from web client
 router.post("/input", (req, res) => {
@@ -39,7 +39,7 @@ router.get("/status", (req, res) => {
 });
 
 // route for handling device events
-router.post("/interrupt", (req, res) => {
+router.get("/interrupt", (req, res) => {
   // if (speed === 0) {
   //   res.send("0");
   //   return;
@@ -51,7 +51,8 @@ router.post("/interrupt", (req, res) => {
       from: "+18577631229",
       to: number,
     })
-    .then(() => console.log("Message sent to " + number));
+    .then((message) => console.log("Message sent to " + number))
+    .catch((err) => console.log(err.message));
   res.send(speed.toString());
 });
 
