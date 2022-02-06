@@ -33,8 +33,8 @@ bool isStopped(float reading) {
     bufferFilled = true;
   }
   if (bufferFilled) {
-    float diff = maxVal(ultrasoundBuffer) - minVal(ultrasoundBuffer)
-                 Serial.println(diff);
+    float diff = maxVal(ultrasoundBuffer) - minVal(ultrasoundBuffer);
+    Serial.println(diff);
     return diff < MIN_CHANGE;
   } else {
     return false;
