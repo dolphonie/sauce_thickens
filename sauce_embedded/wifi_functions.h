@@ -50,24 +50,24 @@ uint8_t char_append(char* buff, char c, uint16_t buff_size) {
 String http_get(String url) {
   WiFiClient client;
   HTTPClient http;  //Declare an object of class HTTPClient
-  
-  http.begin(client, "http://jsonplaceholder.typicode.com/users/1");
+
+  http.begin(client, url);
   int httpCode = http.GET();                                  //Send the request
 
-  if (httpCode >= 200 && httpCode<=299 ) { //Check the returning code
+  if (httpCode >0) { //Check the returning code
     // success
     String payload = http.getString();   //Get the request response payload
     http.end();   //Close connection
+    Serial.println(payload);
     return payload;
   } else {
     //failure
     Serial.println("HTTP request failed");
+    Serial.println(httpCode);
     http.end();   //Close connection
-    return "";
+    return "100";
   }
-
-  
-
 }
+
 
 #endif
