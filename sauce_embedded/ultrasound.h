@@ -27,14 +27,11 @@ bool isStopped(long reading) {
   ultrasoundIndex++;
   ultrasoundIndex %= NUM_ULTRASOUND_SAMPLES;
   ultrasoundBuffer[ultrasoundIndex] = reading;
-  long arrMax = maxVal(ultrasoundBuffer);
-  long arrMin = minVal(ultrasoundBuffer);
   if (ultrasoundIndex == 0) {
     bufferFilled = true;
   }
   if (bufferFilled) {
     long diff = maxVal(ultrasoundBuffer) - minVal(ultrasoundBuffer);
-    Serial.println(diff);
     return diff < MIN_CHANGE;
   } else {
     return false;
