@@ -1,28 +1,55 @@
 import React from "react";
 import "./Skeleton.css";
 import { RouteComponentProps } from "@reach/router";
+import { HistoryOutlined, DashboardOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { post } from "../../utilities";
+
+import "antd/dist/antd.css";
+import { Slider, Button } from "antd";
+
 type Props = RouteComponentProps;
 const Skeleton = (props: Props) => {
+  const [speed, setSpeed] = useState<number>(0);
+
+  const handleChange = (value) => {
+    setSpeed(value);
+  };
+
+  const submitSpeed = () => {
+    post("/api/input", { speed: speed });
+  };
+
+  const stopStirring = () => {
+    setSpeed(0);
+    post("/api/input", { speed: speed });
+  };
+
   return (
-    <>
-      <h1>Good luck on your project :)</h1>
-      <h2> What we provide in this skeleton</h2>
-      <ul>
-        <li>Google Auth (Skeleton.js & auth.js)</li>
-        <li>Socket Infrastructure (client-socket.js & server-socket.js)</li>
-        <li>User Model (auth.js & user.js)</li>
-      </ul>
-      <h2> What you need to change</h2>
-      <ul>
-        <li>Change the font in utilities.css</li>
-        <li>Change the Frontend CLIENT_ID for Google Auth (Skeleton.js)</li>
-        <li>Change the Server CLIENT_ID for Google Auth (auth.js)</li>
-        <li>Change the Database SRV for Atlas (server.js)</li>
-        <li>Change the Database Name for MongoDB (server.js)</li>
-        <li>Add a favicon to your website at the path client/dist/favicon.ico</li>
-        <li>Update website title in client/dist/index.html</li>
-      </ul>
-    </>
+    <div className="App-container">
+      <div className="Slider-container">
+        <h3 className="Slider-text"> Stirring Speed </h3>
+        <DashboardOutlined className="Slider-icon" />
+        <Slider className="Slider-slider" onChange={handleChange} value={speed} />
+      </div>
+      <Button
+        type="primary"
+        className="Button-large"
+        size="large"
+        onClick={submitSpeed}
+      >
+        Submit
+      </Button>
+
+      <Button danger
+        type="default"
+        className="Button-large"
+        size="large"
+        onClick={stopStirring}
+      >
+        Stop Stirring
+      </Button>
+    </div>
   );
 };
 
