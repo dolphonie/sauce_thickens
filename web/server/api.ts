@@ -1,6 +1,15 @@
 import express from "express";
 import socketManager from "./server-socket";
+import twilio from "twilio";
+import dotenv from "dotenv";
+dotenv.config();
+
 const router = express.Router();
+
+// Twilio SMS
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = twilio(accountSid, authToken);
 
 // router.post("/initsocket", (req, res) => {
 //   // do nothing if user not logged in
@@ -16,10 +25,11 @@ const router = express.Router();
 // |------------------------------|
 
 let speed = 0;
+let number = "+16502754976";
 
 // route for handling input from web client
 router.post("/input", (req, res) => {
-  if (req.body.speed) speed = req.body.speed;
+  if (req.body.speed) speed = Number(req.body.speed);
   res.send(speed.toString());
 });
 
@@ -30,8 +40,18 @@ router.get("/status", (req, res) => {
 
 // route for handling device events
 router.post("/interrupt", (req, res) => {
+  // if (speed === 0) {
+  //   res.send("0");
+  //   return;
+  // }
   speed = 0;
-  // Handle some event
+  twilioClient.messages
+    .create({
+      body: "Your stirrer has finished!",
+      from: "+18577631229",
+      to: number,
+    })
+    .then(() => console.log("Message sent to " + number));
   res.send(speed.toString());
 });
 
