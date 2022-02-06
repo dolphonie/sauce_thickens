@@ -26,9 +26,8 @@ const Skeleton = (props: Props) => {
 
   const stopStirring = () => {
     setSpeed(0);
-    post("/api/input", { speed: speed });
+    post("/api/input", { speed: 0 });
   };
-
   return (
     <div className="App-container">
       <div className="Slider-container">
@@ -39,8 +38,12 @@ const Skeleton = (props: Props) => {
       <Button type="primary" className="Button-large" size="large" onClick={submitSpeed}>
         Submit
       </Button>
-
-      <Button danger type="default" className="Button-large" size="large" onClick={stopStirring}>
+      <Button danger
+        type="default"
+        className="Button-large"
+        size="large"
+        onClick={stopStirring}
+      >
         Stop Stirring
       </Button>
     </div>
