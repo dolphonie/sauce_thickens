@@ -50,11 +50,11 @@ uint8_t char_append(char* buff, char c, uint16_t buff_size) {
 String http_get(String url) {
   WiFiClient client;
   HTTPClient http;  //Declare an object of class HTTPClient
-  
+
   http.begin(client, "http://jsonplaceholder.typicode.com/users/1");
   int httpCode = http.GET();                                  //Send the request
 
-  if (httpCode >= 200 && httpCode<=299 ) { //Check the returning code
+  if (httpCode >= 200 && httpCode <= 299 ) { //Check the returning code
     // success
     String payload = http.getString();   //Get the request response payload
     http.end();   //Close connection
@@ -65,9 +65,25 @@ String http_get(String url) {
     http.end();   //Close connection
     return "";
   }
-
-  
-
 }
+
+//void http_post(String url) {
+//  WiFiClient client;
+//  HTTPClient http;
+//
+//  // Your Domain name with URL path or IP address with path
+//  http.begin(client, url);
+//
+//  // If you need an HTTP request with a content type: application/json, use the following:
+////  http.addHeader("Content-Type", "application/json");
+////  int httpResponseCode = http.POST("{\"speed\":\"5\"}");
+//  int httpResponseCode = http.POST();
+//  Serial.print("HTTP Response code: ");
+//  Serial.println(httpResponseCode);
+//
+//  // Free resources
+//  http.end();
+////  return http.getString();
+//}
 
 #endif
