@@ -4,36 +4,36 @@
 #include "constants.h"
 Ultrasonic ultrasonic(ULTRASOUND_PIN);
 int ultrasoundIndex = 0;
-float ultrasoundBuffer[NUM_ULTRASOUND_SAMPLES];
+long ultrasoundBuffer[NUM_ULTRASOUND_SAMPLES];
 bool bufferFilled = false;
 
-float maxVal(float* arr) {
-  float toRet = -9999;
-  for (int i = 0; i < sizeof(arr); i++) {
+long maxVal(long* arr) {
+  long toRet = -9999;
+  for (int i = 0; i < NUM_ULTRASOUND_SAMPLES; i++) {
     toRet = max(toRet, arr[i]);
   }
   return toRet;
 }
 
-float minVal(float* arr) {
-  float toRet = 9999;
-  for (int i = 0; i < sizeof(arr); i++) {
+long minVal(long *arr) {
+  long toRet = 9999;
+  for (int i = 0; i < NUM_ULTRASOUND_SAMPLES; i++) {
     toRet = min(toRet, arr[i]);
   }
   return toRet;
 }
 
-bool isStopped(float reading) {
+bool isStopped(long reading) {
   ultrasoundIndex++;
   ultrasoundIndex %= NUM_ULTRASOUND_SAMPLES;
   ultrasoundBuffer[ultrasoundIndex] = reading;
-  float arrMax = maxVal(ultrasoundBuffer);
-  float arrMin = minVal(ultrasoundBuffer);
+  long arrMax = maxVal(ultrasoundBuffer);
+  long arrMin = minVal(ultrasoundBuffer);
   if (ultrasoundIndex == 0) {
     bufferFilled = true;
   }
   if (bufferFilled) {
-    float diff = maxVal(ultrasoundBuffer) - minVal(ultrasoundBuffer);
+    long diff = maxVal(ultrasoundBuffer) - minVal(ultrasoundBuffer);
     Serial.println(diff);
     return diff < MIN_CHANGE;
   } else {
@@ -41,8 +41,9 @@ bool isStopped(float reading) {
   }
 }
 
-float getUltrasoundReading() {
-  return ultrasonic.MeasureInCentimeters();
+long getUltrasoundReading() {
+  long cm = ultrasonic.MeasureInCentimeters();
+  return cm;
 }
 
 #endif

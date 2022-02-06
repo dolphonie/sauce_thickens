@@ -7,15 +7,28 @@
 // the number of steps of the motor and the pins it's
 // attached to
 Stepper stepper(STEPS_PER_ROT, STEPPER_PIN_1, STEPPER_PIN_2, STEPPER_PIN_3, STEPPER_PIN_4);
-long timer;
+unsigned long timer;
 long speed;
+bool stopDetected = false;
+bool motorStopped;
+
+void setStepperSpeed() {
+  speed = long(http_get(QUERY_URL).toInt() * STEPPER_SPEED / 100);
+  if (speed == 0) {
+    motorStopped = true;
+    stepper.setSpeed(1);
+  } else {
+    motorStopped = false;
+    stepper.setSpeed(speed);
+  }
+  Serial.println(speed);
+}
 
 void setup() {
   Serial.begin(115200);
   setup_wifi();
 
-  speed = long(http_get(QUERY_URL).toInt() * STEPPER_SPEED);
-  stepper.setSpeed(speed);
+  setStepperSpeed();
 
   pinMode(PWM_PIN_1, OUTPUT);  // sets the pin as output
   pinMode(PWM_PIN_2, OUTPUT);  // sets the pin as output
@@ -26,17 +39,32 @@ void setup() {
 }
 
 void loop() {
-  stepper.step(STEPS_PER_LOOP);
+  if (stopDetected) {
+    stepper.step(STEPS_PER_LOOP);
+    return;
+  }
+
+  if (!motorStopped) {
+    stepper.step(STEPS_PER_LOOP);
+  }
+
   if (speed >= STEPPER_SPEED - 1) {
+//    Serial.println("Performing stop check");
     bool stopped = isStopped(getUltrasoundReading());
     if (stopped) {
+      Serial.println("Reporting stopped stirrer and texted user");
       http_get(STOPPED_URL);
-      Serial.println("Reported stopped stirrer and texted user");
+      // set duty cycle to full to continue stirring
+      analogWrite(PWM_PIN_1, 255);
+      analogWrite(PWM_PIN_2, 255);
+      stopDetected = true;
+      return;
     }
   }
+ 
   if (millis() - timer > QUERY_PERIOD) {
-    speed = long(http_get(QUERY_URL).toInt() * STEPPER_SPEED);
-    stepper.setSpeed(speed);
+    Serial.println("Querying speed");
+    setStepperSpeed();
     timer = millis();
   }
 }

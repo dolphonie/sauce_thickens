@@ -19,20 +19,20 @@ const int PWM_PIN_2 = 2;
 
 // ultrasound constants
 const int ULTRASOUND_PIN = 0;
-const int MIN_CHANGE = 5;
-const int NUM_ULTRASOUND_SAMPLES = 20;
+const int MIN_CHANGE = 13;
+const int NUM_ULTRASOUND_SAMPLES = 40;
 
 //duty cycle
 const int DUTY_CYCLE = 96; // from 0 to 255
 
 
 // Wifi constants
-char NETWORK[] = "MIT";  // SSID for Wifi Network
-char PASSWORD[] = ""; // Password for Wifi Network
+char NETWORK[] = "stratus";  // SSID for Wifi Network
+char PASSWORD[] = "jeremysux"; // Password for Wifi Network
 
-String QUERY_URL = "https://sauce-thickens.loca.lt/api/status";
-String STOPPED_URL = "https://sauce-thickens.loca.lt/api/interrupt";
+String QUERY_URL = "http://sauce-thickens.loca.lt/api/status";
+String STOPPED_URL = "http://sauce-thickens.loca.lt/api/interrupt";
 
-const int QUERY_PERIOD = 1000;
+const unsigned long QUERY_PERIOD = 5000;
 
 #endif
