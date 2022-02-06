@@ -29,7 +29,7 @@ let number = "+16502754976";
 
 // route for handling input from web client
 router.post("/input", (req, res) => {
-  if (req.body.speed) speed = Number(req.body.speed);
+  if (typeof req.body.speed !== "undefined") speed = Number(req.body.speed);
   res.send(speed.toString());
 });
 
